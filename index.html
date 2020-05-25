@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Практика_С3</title>
+	
+</head>
+<body>
+    <form name="test" method="post" action="">
+        <div id="input_city">
+        <p><b>Введите ваш город:</b><br>
+        <input id="city" type="text" size="30" style="border-radius: 5px; height: 20px; margin-top: 10px">
+        </p>
+        </div>
+        <p><input id="save" type="button" value="Сохранить" onclick="getCity()"></p>
+
+
+        <div id="result" style="display: none;">
+        <p id="result_text" style="font-size: 25px; color: red"></p>
+        <p><input id="clear" type="button" value="Очистить" onclick="clearCity()"></p>
+        </div>
+    </form>
+<script>
+
+function getCity() {
+	let city = document.getElementById("city").value;
+	if (city){
+	let date = new Date(Date.now() + 86400e3);
+	date = date.toUTCString();
+	document.cookie = encodeURIComponent('City')+ '=' + encodeURIComponent(city)+'; expires='+ date+'; path=/';
+}
+}
+
+function clearCity() {
+	window.location.reload()
+	document.querySelector('#input_city').style.display = '';
+	document.querySelector('#result').style.display = 'none';
+	document.querySelector('#save').style.display = '';
+	let cookies = document.cookie.split(";");
+	for (let i = 0; i < cookies.length; i++) {
+		let cookie = cookies[i];
+		let eqPos = cookie.indexOf("=");
+		let name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+		document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;";
+		document.cookie = name + '=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+	}
+
+}
+
+
+function getCookie(name) {
+	let matches = document.cookie.match(new RegExp(
+		'(?:^|\s)' + name.replace(/([.$?*+\\\/{}|()\[\]^])/g, '\\$1') + '=(.*?)(?:;|$)'));
+	return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+let nameCity = getCookie('City')
+if (nameCity){
+	document.querySelector('#input_city').style.display = 'none';
+	document.querySelector('#result').style.display = '';
+	document.querySelector('#result_text').innerText="Ваш город: "+nameCity
+	document.querySelector('#save').style.display = 'none';
+}
+
+
+</script>
+</body>
+</html>
